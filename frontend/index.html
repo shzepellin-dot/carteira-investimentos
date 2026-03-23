@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carteira B3</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        .status {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+        }
+        .status.ok {
+            background: #d4edda;
+            color: #155724;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Carteira B3</h1>
+        <div class="status" id="status">Verificando...</div>
+        <h3>Buscar Ação</h3>
+        <input type="text" id="ticker" placeholder="Ex: PETR4" />
+        <button onclick="buscar()">Buscar</button>
+        <div id="resultado"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+
+        async function verificarAPI() {
+            try {
+                const res = await axios.get(`${API_URL}/health`);
+                document.getElementById('status').innerHTML = '✅ API Online!';
+                document.getElementById('status').classList.add('ok');
+            } catch(e) {
+                document.getElementById('status').innerHTML = '❌ API Offline';
+            }
+        }
+
+        async function buscar() {
+            const ticker = document.getElementById('ticker').value;
+            try {
+                const res = await axios.get(`${API_URL}/acoes/${ticker}`);
+                document.getElementById('resultado').innerHTML = `
+                    <p><strong>${res.data.ticker}</strong><br>
+                    Preço: R$ ${res.data.preco}<br>
+                    Variação: ${res.data.variacao}%</p>
+                `;
+            } catch(e) {
+                alert('Erro ao buscar');
+            }
+        }
+
+        verificarAPI();
+    </script>
+</body>
+</html>

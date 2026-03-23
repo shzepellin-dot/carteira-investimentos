@@ -1,0 +1,19 @@
+CREATE TABLE IF NOT EXISTS usuarios (
+    id SERIAL PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    data_criacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS acoes (
+    id SERIAL PRIMARY KEY,
+    ticker VARCHAR(10) UNIQUE NOT NULL,
+    nome_empresa VARCHAR(255),
+    preco_atual FLOAT
+);
+
+CREATE TABLE IF NOT EXISTS carteira (
+    id SERIAL PRIMARY KEY,
+    usuario_id INTEGER NOT NULL REFERENCES usuarios(id),
+    patrimonio_total FLOAT DEFAULT 0
+);
